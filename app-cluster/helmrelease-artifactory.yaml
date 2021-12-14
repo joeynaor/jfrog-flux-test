@@ -1,0 +1,38 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: artifactory
+  namespace: flux-system
+spec:
+  install:
+    disableWait: true # don't wait for pod to be ready before applying changes
+  upgrade:
+    disableWait: true # don't wait for pod to be ready before applying changes
+  interval: 1m0s
+  releaseName: artifactory
+  targetNamespace: default
+  chart:
+    spec:
+      chart: artifactory
+      version: 107.29.7
+      sourceRef:
+        kind: HelmRepository
+        name: jfrog
+  ##################################
+  # Custom Artifactory values.yaml #
+  ##################################
+  values:
+    artifactory:
+      joinKey: 011b61f5c6a5928d4489df5fe6f120569c29c9e9dafb01f720c61853a3d90e2b
+      masterKey: ce2dcb873c3094d5dd8e7a7136158e4f31866d802435306c1855a7213853ee34
+      replicaCount: 2
+
+    databaseUpgradeReady: true
+    unifiedUpgradeAllowed: true
+
+    postgresql:
+      postgresqlPassword: password
+  ##################################
+
+
