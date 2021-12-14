@@ -48,7 +48,7 @@ flux create source helm jfrog \
 --interval 1m0s \
 --export > helmrepo-jfrog.yaml
 ```
-This commands creates a local YAML file (helmrepo-jfrog.yaml) which includes all the JFrog Helm repository information. The file should look like this:
+This command creates a local YAML file called **helmrepo-jfrog.yaml** which includes all the JFrog Helm repository information. The file should look like this:
 ```
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
@@ -72,7 +72,7 @@ NAME 	READY	MESSAGE                                                             
 jfrog	True 	Fetched revision: 39c3e634f20c387f09ad36c83882a5c16ff867f0ba5905ab9627bb1d63bac789	39c3e634f20c387f09ad36c83882a5c16ff867f0ba5905ab9627bb1d63bac789	False
 ```
 ### Deploying Artifactory as a HelmRelease
-The [HelmRelease object](https://fluxcd.io/docs/components/helm/helmreleases/#disabling-resource-waiting) will be used to deploy a JFrog chart, in our case, Artifactory. As before, we can create the initial YAM file using the Flux CD CLI:
+The [HelmRelease object](https://fluxcd.io/docs/components/helm/helmreleases/#disabling-resource-waiting) will be used to deploy a JFrog Helm chart, in our case, Artifactory. As before, we can create the initial YAML file using the Flux CD CLI:
 ```
 flux create helmrelease artifactory \
   --source=HelmRepository/jfrog \
@@ -83,9 +83,9 @@ flux create helmrelease artifactory \
   --interval 1m0s \
   --export > helmrelease-artifactory.yaml
 ```
-This will give us a basic HelmRelease YAML file (helmrelease-artifactory.yaml) which is equivalent to deploying the Artifactory Chart with the default values.
+This will give us a basic HelmRelease YAML file called **helmrelease-artifactory.yaml** which is equivalent to deploying the Artifactory Chart with the default values.
 
-I have added some custom modifications such the chart-specific values (values.yaml) and allowing Flux CD to apply changes to the cluster even if pods are marked as not ready:
+We can some custom modifications such the chart-specific values (values.yaml) and allowing Flux CD to apply changes to the cluster even if pods are marked as not ready:
 ```
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -124,13 +124,14 @@ spec:
       postgresqlPassword: password
   ##################################
 ```
-Next, we place **helmrelease-artifactory.yaml** along with **helmrepo-jfrog.yaml** under **helm-infra/app-cluster** and push the changes to Git:
+Next, we place **helmrelease-artifactory.yaml** along with **helmrepo-jfrog.yaml** under **helm-infra/app-cluster** and push to Git once more:
 ```
 git add -A && git commit -m "test" && git push
  ```
- Flux CD should pick up the new commit and deploy Artifactory.
- ### Installing Xray
-Deploying Xray (and any other chart/product) consists of the exact same logic as above. I have been using this HelmRelease YAML file:
+Flux CD should pick up the new commit and deploy Artifactory.
+ 
+### Installing Xray
+Deploying Xray (and any other chart/product) consists of the exact same logic as above. We will be using this HelmRelease YAML file called **helmrelease-xray.yaml**:
 ```
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -167,7 +168,7 @@ spec:
   targetNamespace: default
 ```
 ### Values, Changes and Upgrades
-From this point onward, and changes done to our HelmRelease YAML files that were pushed to Git will trigger a redeploy the same way as Helm (helm upgrade). For instance, we can scale down the Artifactory deployment from 2 nodes to 1 by reconfiguring the replicaCount in **helmrelease-artifactory.yaml**:
+From this point onward, any changes done to our HelmRelease YAML files that were pushed to Git will trigger a redeploy the same way as Helm (helm upgrade). For instance, we can scale down the Artifactory deployment from 2 nodes to 1 by reconfiguring the replicaCount in **helmrelease-artifactory.yaml**:
 ```
   values:
     artifactory:
@@ -175,7 +176,7 @@ From this point onward, and changes done to our HelmRelease YAML files that were
       masterKey: ce2dcb873c3094d5dd8e7a7136158e4f31866d802435306c1855a7213853ee34
       replicaCount: 1
 ```
-After pushing the changes to Git, Flux CD will scale the cluster down and remove the Artifactory pod.
+After pushing the changes to Git, Flux CD will scale the cluster down and remove the 2nd Artifactory pod.
 
 Upgrading the Application version is very simple and consists of the same logic above. Simply change the value of  **chart.spec.version** in **helmrelease-artifactory.yaml**:
 ```
@@ -184,4 +185,4 @@ Upgrading the Application version is very simple and consists of the same logic 
       chart: artifactory
       version: 107.29.7
 ```
-Performing a Git push will trigger a rolling upgrade of all the Artifactory nodes in the cluster, from version 7.27.10 to 7.29.7.
+Performing a Git push will trigger a rolling upgrade of all the Artifactory nodes in the cluster, one by one, from version 7.27.10 to 7.29.7.
