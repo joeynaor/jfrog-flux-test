@@ -83,7 +83,9 @@ flux create helmrelease artifactory \
   --interval 1m0s \
   --export > helmrelease-artifactory.yaml
 ```
-This will give us a basic HelmRelease YAML file (helmrelease-artifactory.yaml) which is equivalent to deploying the Artifactory Chart with the default values. I have added some costume modifications such as specifying the chart-specific values (values.yaml) and allowing Flux CD to apply changes to the cluster even if pods are marked as not ready:
+This will give us a basic HelmRelease YAML file (helmrelease-artifactory.yaml) which is equivalent to deploying the Artifactory Chart with the default values.
+
+I have added some custom modifications such the chart-specific values (values.yaml) and allowing Flux CD to apply changes to the cluster even if pods are marked as not ready:
 ```
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
