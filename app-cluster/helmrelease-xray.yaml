@@ -5,6 +5,13 @@ metadata:
   name: xray
   namespace: flux-system
 spec:
+  install:
+    disableWait: true # don't wait for pod to be ready before applying changes
+  upgrade:
+    disableWait: true # don't wait for pod to be ready before applying changes
+  interval: 1m0s
+  releaseName: xray
+  targetNamespace: default
   chart:
     spec:
       chart: xray
@@ -28,7 +35,3 @@ spec:
     unifiedUpgradeAllowed: true
     databaseUpgradeReady: true
   ###########################
-  interval: 1m0s
-  releaseName: xray
-  targetNamespace: default
-
