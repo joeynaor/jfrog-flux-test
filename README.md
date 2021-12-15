@@ -9,7 +9,7 @@ Do not use the dummy master and join keys from this project in your environments
 
 ## Intro
 Our goal is to be able to deploy and manage JFrog products such as Artifactory and Xray through Flux CD, which is a GitOps tool. In this test, we will attempt to perform the following using Flux CD:
-1. Install Artifactory HA and Xray with custom values
+1. Install the Artifactory HA and Xray [Helm Charts](https://github.com/jfrog/charts) with custom values
 2. Automatically apply values changes after performing a 'git push'
 3. Upgrade the Artifactory/Xray application version
 
