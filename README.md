@@ -173,6 +173,9 @@ spec:
     databaseUpgradeReady: true
   ###########################
 ```
+Followed by placing helmrelease-xray.yaml along with helmrepo-jfrog.yaml and helmrelease-artifactory.yaml under helm-infra/app-cluster and pushing to Git.
+
+
 ### Values, Changes and Upgrades
 From this point onward, any changes done to our HelmRelease YAML files that were pushed to Git will trigger a redeploy the same way as an 'helm upgrade'. For instance, we can scale down the Artifactory deployment from 2 nodes to 1 by reconfiguring the replicaCount in **helmrelease-artifactory.yaml**:
 ```
