@@ -173,7 +173,7 @@ spec:
     databaseUpgradeReady: true
   ###########################
 ```
-Followed by placing helmrelease-xray.yaml along with helmrepo-jfrog.yaml and helmrelease-artifactory.yaml under helm-infra/app-cluster and pushing to Git.
+Followed by placing **helmrelease-xray.yaml** along with **helmrelease-artifactory.yaml** and **helmrepo-jfrog.yaml** under **helm-infra/app-cluster** and pushing to Git.
 
 
 ### Values, Changes and Upgrades
@@ -187,7 +187,7 @@ From this point onward, any changes done to our HelmRelease YAML files that were
 ```
 After pushing the changes to Git, Flux CD will scale the cluster down and remove the 2nd Artifactory pod.
 
-Upgrading the Application version is very simply requires changing the value of  **chart.spec.version** in **helmrelease-artifactory.yaml**:
+Upgrading the Application version is very simple and only requires changing the value of **chart.spec.version** in the HelmRelease file(s). For example, in **helmrelease-artifactory.yaml**:
 ```
   chart:
     spec:
